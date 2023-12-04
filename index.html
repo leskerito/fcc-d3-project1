@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: D3</title>
+</head>
+<style>
+    .bar:hover {
+        color: black;
+    }
+</style>
+
+<body>
+    <h1 id="title">Quarterly GDP of the United States from 1947 to 2015</h1>
+
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+
+    <script type="module">
+
+        import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
+
+
+        const dataUrl = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
+        const req = new XMLHttpRequest();
+
+        req.open("GET", dataUrl, true);
+        req.send();
+        req.onload = () => {
+            const fullData = JSON.parse(req.response);
+
+            const width = 1000;
+            const height = 500;
+            const marginTop = 20;
+            const marginRight = 20;
+            const marginBottom = 30;
+            const marginLeft = 40;
+
+            const dataset = fullData.data
+            const from_date = fullData.from_date
+            const to_date = fullData.to_date
+
+            const minimum = d3.min(dataset, data => data[1])
+            const maximum = d3.max(dataset, data => data[1])
+
+
+            const svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+
+            const x = d3.scaleUtc()
+                .domain([new Date(from_date), new Date(to_date)])
+                .range([marginLeft, width - marginRight]);
+
+            const y = d3.scaleLinear()
+                .domain([minimum, maximum])
+                .range([height - marginBottom, marginTop]);
+
+            svg.append("g")
+                .attr("id", "x-axis")
+                .attr("transform", `translate(0,${height - marginBottom})`)
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .attr("id", "y-axis")
+                .attr("transform", `translate(${marginLeft},0)`)
+                .call(d3.axisLeft(y));
+
+            svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", (d, i) => i * width/dataset.length + marginLeft)
+            .attr("y", (d) => 0)
+            .attr("class", "bar")
+
+            svg.selectAll(".bar")
+            .data(dataset)
+            .attr("data-date", d => d[0])
+            .attr("data-gdp", d => d[1])
+
+
+        }
+    </script>
+</body>
+
+</html>
