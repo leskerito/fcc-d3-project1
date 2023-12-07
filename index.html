@@ -69,17 +69,27 @@
                 .call(d3.axisLeft(y));
 
             svg.selectAll("rect")
-            .data(dataset)
-            .enter()
-            .append("rect")
-            .attr("x", (d, i) => i * width/dataset.length + marginLeft)
-            .attr("y", (d) => 0)
-            .attr("class", "bar")
+                .data(dataset)
+                .enter()
+                .append("rect")
+                .attr("x", (d, i) => i * (width / dataset.length) + marginLeft)
+                .attr("y", d => height - (marginBottom) - d[1] / maximum * height)
+                .attr("height", d => {
+                    return d[1] / maximum * height
+                })
+                .attr("width", () => width / dataset.length)
+                .attr("class", "bar")
 
             svg.selectAll(".bar")
-            .data(dataset)
-            .attr("data-date", d => d[0])
-            .attr("data-gdp", d => d[1])
+                .data(dataset)
+                .attr("data-date", d => {
+                    console.log("data-date", d[0])
+                    return d[0]
+                })
+                .attr("data-gdp", d => {
+                    console.log("data-gdp", d[1])
+                    return d[1]
+                })
 
 
         }
