@@ -50,7 +50,7 @@
                 .attr("width", width)
                 .attr("height", height)
 
-            const x = d3.scaleUtc()
+            const x = d3.scaleTime()
                 .domain([new Date(from_date), new Date(to_date)])
                 .range([marginLeft, width - marginRight]);
 
